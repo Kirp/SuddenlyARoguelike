@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DungeonFloorManager : MonoBehaviour
 {
-
+    [SerializeField] GameObject tilePrefab;
     DungeonGenerator dungeonGenerator;
 
     private void Awake()
@@ -15,10 +15,24 @@ public class DungeonFloorManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dungeonGenerator = new DungeonGenerator(20,20);
+        dungeonGenerator = new DungeonGenerator(20, 20);
         dungeonGenerator.GenerateDungeon();
+        dungeonGenerator.ChangeTile(1, 0, 1);
+        dungeonGenerator.ChangeTile(5,5,1);
+        GenerateTileMap();
 
-        Debug.Log(dungeonGenerator.GetTileAt(1,1));
+    }
+
+    private void GenerateTileMap()
+    {
+        TileData[] getDat = dungeonGenerator.GetAllTiles();
+
+        foreach (TileData tile in getDat)
+        {
+            GameObject genTile = Instantiate(tilePrefab, new Vector3(tile.x, 0f, tile.y), Quaternion.identity);
+            genTile.GetComponent<Tile>().ChangeTileTo(tile.tileType);
+            Debug.Log(tile.x + " : " + tile.y + " = " + tile.tileType);
+        }
     }
 
     // Update is called once per frame
