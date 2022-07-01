@@ -120,9 +120,9 @@ public class DungeonGenerator
     {
         if(
             x>=0              &&
-            x<=dungeonWidth   &&
+            x<dungeonWidth   &&
             y>=0              &&
-            y<=dungeonHeight
+            y<dungeonHeight
            )
         {
             return true;

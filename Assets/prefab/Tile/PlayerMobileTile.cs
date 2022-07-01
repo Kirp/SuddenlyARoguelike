@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMobileTile : MonoBehaviour
 {
-
+    Vector3 dPadDetector = Vector3.zero;
     bool isMoving = false;
     [SerializeField] DungeonFloorManager dfm;
 
@@ -17,11 +17,15 @@ public class PlayerMobileTile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 dPad = new Vector3(Input.GetAxisRaw("Horizontal"), 0,Input.GetAxisRaw("Vertical"));
+        dPadDetector.x = Input.GetAxisRaw("Horizontal");
+        dPadDetector.z = Input.GetAxisRaw("Vertical");
         
-        if (dPad.x != 0 || dPad.z!=0)
+        if (dPadDetector.x != 0 || dPadDetector.z!=0)
         {
-            if(!isMoving) StartCoroutine(MoveStep(dPad));
+            //No diagonals yo
+            if (dPadDetector.x != 0 && dPadDetector.z != 0) return;
+
+            if(!isMoving) StartCoroutine(MoveStep(dPadDetector));
         }
     }
 

@@ -6,6 +6,8 @@ public class DungeonFloorManager : MonoBehaviour
 {
     [SerializeField] GameObject tilePrefab;
     [SerializeField] Transform floorTileParent;
+    [SerializeField] int dungeonWidth = 30;
+    [SerializeField] int dungeonHeight = 20;
     DungeonGenerator dungeonGenerator;
 
     private void Awake()
@@ -16,9 +18,9 @@ public class DungeonFloorManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dungeonGenerator = new DungeonGenerator(60, 30);
+        dungeonGenerator = new DungeonGenerator(dungeonWidth, dungeonHeight);
         dungeonGenerator.GenerateDungeon();
-        dungeonGenerator.AddRoom(10,10,2,2);
+        //dungeonGenerator.AddRoom(14,11,2,4);
         GenerateTileMap();
 
     }
