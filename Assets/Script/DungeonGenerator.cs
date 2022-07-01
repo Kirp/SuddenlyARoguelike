@@ -8,6 +8,7 @@ public class DungeonGenerator
     int dungeonWidth;
     int dungeonHeight;
 
+    List<Vector4> roomList = new List<Vector4>();
 
     public enum TileLookup
     {
@@ -34,16 +35,58 @@ public class DungeonGenerator
     }
 
 
-    public void AddRoom(int x, int y)
-    {
 
-    }
 
 
     /*
      For alterations
          */
-    
+
+    public void AddRoom(int x, int y, int width, int height)
+    {
+        if (width % 2 != 0)
+        {
+            width++;
+        }
+
+        if(height%2 != 0)
+        {
+            height++;
+        }
+
+        Vector4 room = new Vector4(x,y,width,height);
+
+        Debug.Log(room);
+
+        int halfHeight = Mathf.FloorToInt(height / 2);
+        int halfWidth = Mathf.FloorToInt(width/2);
+
+        Debug.Log(halfHeight);
+        Debug.Log(halfWidth);
+
+
+        for (var ctry = y - halfHeight; ctry <= y + halfHeight; ctry++)
+        {
+            for (var ctrx = x - halfWidth; ctrx <= x + halfWidth; ctrx++)
+            {
+                ChangeTile(ctrx, ctry, 1);
+            }
+        }
+        
+
+        /*
+        ChangeTile(x, y, 1);
+        ChangeTile(x-width/2, y, 1);
+        ChangeTile(x+width / 2, y, 1);
+        ChangeTile(x, y-height/2, 1);
+        ChangeTile(x, y+height/2, 1);
+        */
+
+        roomList.Add(room);
+
+
+    }
+
     public void ChangeTile(int x, int y, int changeTo)
     {
         string tileName = x + "x" + y;
@@ -73,6 +116,20 @@ public class DungeonGenerator
         return tileDataList;
     }
 
+    public bool IsWithinBounds(int x, int y)
+    {
+        if(
+            x>=0              &&
+            x<=dungeonWidth   &&
+            y>=0              &&
+            y<=dungeonHeight
+           )
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 
 }

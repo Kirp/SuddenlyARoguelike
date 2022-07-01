@@ -1,15 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Tile : MonoBehaviour
 {
     [SerializeField] Material matWall;
     [SerializeField] Material matFloor;
-    MeshRenderer meshRenderer;
+    [SerializeField] Transform meshObj;
+    [SerializeField] MeshRenderer meshRenderer;
+    [SerializeField] TextMeshPro tileText;
 
     // Start is called before the first frame update
     void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
+        
     }
 
     // Update is called once per frame
@@ -20,15 +25,17 @@ public class Tile : MonoBehaviour
 
     public void ChangeTileTo(int type)
     {
-        meshRenderer = GetComponent<MeshRenderer>();
+        
         switch (type)
         {
             case 0:
                 
                 meshRenderer.material = matWall;
+                tileText.text = "#";
                 break;
             case 1:
                 meshRenderer.material = matFloor;
+                tileText.text = ".";
                 break;
             default:
                 //do nothing

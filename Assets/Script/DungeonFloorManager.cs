@@ -5,6 +5,7 @@ using UnityEngine;
 public class DungeonFloorManager : MonoBehaviour
 {
     [SerializeField] GameObject tilePrefab;
+    [SerializeField] Transform floorTileParent;
     DungeonGenerator dungeonGenerator;
 
     private void Awake()
@@ -15,10 +16,9 @@ public class DungeonFloorManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dungeonGenerator = new DungeonGenerator(20, 20);
+        dungeonGenerator = new DungeonGenerator(60, 30);
         dungeonGenerator.GenerateDungeon();
-        dungeonGenerator.ChangeTile(1, 0, 1);
-        dungeonGenerator.ChangeTile(5,5,1);
+        dungeonGenerator.AddRoom(10,10,2,2);
         GenerateTileMap();
 
     }
@@ -31,7 +31,8 @@ public class DungeonFloorManager : MonoBehaviour
         {
             GameObject genTile = Instantiate(tilePrefab, new Vector3(tile.x, 0f, tile.y), Quaternion.identity);
             genTile.GetComponent<Tile>().ChangeTileTo(tile.tileType);
-            Debug.Log(tile.x + " : " + tile.y + " = " + tile.tileType);
+            genTile.transform.parent = floorTileParent;
+            //Debug.Log(tile.x + " : " + tile.y + " = " + tile.tileType);
         }
     }
 
@@ -39,5 +40,11 @@ public class DungeonFloorManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    //interface for mobile tiles
+    public bool IsValidMoveToTile(int x, int y)
+    {
+        return dungeonGenerator.IsWithinBounds(x, y);
     }
 }
