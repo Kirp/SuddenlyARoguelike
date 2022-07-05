@@ -45,11 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fe39dcd8deedb5438995c25d29d3bee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  matStone: {fileID: 2100000, guid: 953fbecaee64a0f4f9c4aac9fc6ebbe3, type: 2}
   matWall: {fileID: 2100000, guid: 953fbecaee64a0f4f9c4aac9fc6ebbe3, type: 2}
   matFloor: {fileID: 2100000, guid: 604ad118683c9584abb688dedc387844, type: 2}
   meshObj: {fileID: 4730809396253442690}
   meshRenderer: {fileID: 6845090709577870516}
   tileText: {fileID: 3316591569356914627}
+  isWalkable: 0
 --- !u!1 &5915288807672817413
 GameObject:
   m_ObjectHideFlags: 0

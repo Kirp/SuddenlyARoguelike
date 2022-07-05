@@ -9,5 +9,6 @@ public class TileData
         this.x = x;
         this.y = y;
         this.tileType = tileType;
+        
     }
 }

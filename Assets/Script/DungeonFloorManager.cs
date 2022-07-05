@@ -10,6 +10,7 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] int dungeonHeight = 20;
     DungeonGenerator dungeonGenerator;
 
+
     private void Awake()
     {
         
@@ -38,15 +39,13 @@ public class DungeonFloorManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     //interface for mobile tiles
     public bool IsValidMoveToTile(int x, int y)
     {
-        return dungeonGenerator.IsWithinBounds(x, y);
+        return dungeonGenerator.IsWithinBounds(x, y) && dungeonGenerator.CheckIfWalkable(x,y);
     }
+
+    
 }

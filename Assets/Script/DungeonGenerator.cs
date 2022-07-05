@@ -8,13 +8,17 @@ public class DungeonGenerator
     int dungeonWidth;
     int dungeonHeight;
 
-    List<Vector4> roomList = new List<Vector4>();
+    List<RoomData> roomList = new List<RoomData>();
 
     public enum TileLookup
     {
-        Wall,
-        Floor
+        Stone,
+        Floor,
+        Wall
     }
+
+
+
     
     public DungeonGenerator(int width, int height)
     {
@@ -24,6 +28,7 @@ public class DungeonGenerator
 
     public void GenerateDungeon()
     {
+        //first fill it with walls
         for (var coordY = 0; coordY < dungeonHeight; coordY++)
         {
             for (var coordX = 0; coordX < dungeonWidth; coordX++)
@@ -32,6 +37,28 @@ public class DungeonGenerator
                 dungeonFloor.Add(tileName, 0);
             }
         }
+
+        //then we dig out the rooms
+        int maxRoomCalls = 20;
+        for(int ctr = 0; ctr <maxRoomCalls; ctr++)
+        {
+            //for each room call lets roll coord, width, height
+
+            int roomWidth = Mathf.RoundToInt(Random.Range(3,6));
+            int roomHeight = Mathf.RoundToInt(Random.Range(3,6));
+
+            int posX = Mathf.RoundToInt(Random.Range(0, dungeonWidth));
+            int posY = Mathf.RoundToInt(Random.Range(0, dungeonHeight));
+
+            RoomData generatedRoom = new RoomData(posX, posY, roomWidth, roomHeight);
+
+            //then check if its valid
+            if (ValidRoomPlace(generatedRoom))
+            {
+                AddRoom(generatedRoom);
+            }
+        }
+
     }
 
 
@@ -42,32 +69,28 @@ public class DungeonGenerator
      For alterations
          */
 
-    public void AddRoom(int x, int y, int width, int height)
+    public void AddRoom(RoomData room)
     {
-        if (width % 2 != 0)
+        if (room.width % 2 != 0)
         {
-            width++;
+            room.width++;
         }
 
-        if(height%2 != 0)
+        if(room.height%2 != 0)
         {
-            height++;
+            room.height++;
         }
 
-        Vector4 room = new Vector4(x,y,width,height);
-
-        Debug.Log(room);
-
-        int halfHeight = Mathf.FloorToInt(height / 2);
-        int halfWidth = Mathf.FloorToInt(width/2);
-
-        Debug.Log(halfHeight);
-        Debug.Log(halfWidth);
+        //RoomData room = new RoomData(x,y,width,height);
 
 
-        for (var ctry = y - halfHeight; ctry <= y + halfHeight; ctry++)
+        int halfHeight = Mathf.FloorToInt(room.height / 2);
+        int halfWidth = Mathf.FloorToInt(room.width/2);
+
+
+        for (var ctry = room.y - halfHeight+1; ctry <= room.y + halfHeight-1; ctry++)
         {
-            for (var ctrx = x - halfWidth; ctrx <= x + halfWidth; ctrx++)
+            for (var ctrx = room.x - halfWidth+1; ctrx <= room.x + halfWidth-1; ctrx++)
             {
                 ChangeTile(ctrx, ctry, 1);
             }
@@ -85,6 +108,26 @@ public class DungeonGenerator
         roomList.Add(room);
 
 
+    }
+
+    bool ValidRoomPlace(RoomData data)
+    {
+        //check edges
+        if(data.x-data.width >= 0 &&
+            data.x+data.width < dungeonWidth &&
+            data.y - data.height >= 0 &&
+            data.y+data.height < dungeonHeight &&
+
+            GetTileAt(data.x - data.width/2, data.y - data.height/2) == 0 &&
+            GetTileAt(data.x - data.width/2, data.y + data.height/2) == 0 &&
+            GetTileAt(data.x + data.width/2, data.y - data.height/2) == 0 &&
+            GetTileAt(data.x + data.width/2, data.y + data.height/2) == 0 &&
+            GetTileAt(data.x, data.y) == 0
+            )
+        {
+            return true;
+        }
+        return false;
     }
 
     public void ChangeTile(int x, int y, int changeTo)
@@ -129,6 +172,27 @@ public class DungeonGenerator
         }
 
         return false;
+    }
+
+    public bool CheckIfWalkable(int x, int y)
+    {
+        return CheckIfWalkable(GetTileAt(x, y));
+    }
+
+    public bool CheckIfWalkable(int tileType)
+    {
+        switch (tileType)
+        {
+            case 0:
+                return false;
+            case 1:
+                return true;
+            case 2:
+                return false;
+            default:
+                return false;
+        }
+
     }
 
 

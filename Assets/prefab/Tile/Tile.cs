@@ -5,11 +5,15 @@ using TMPro;
 
 public class Tile : MonoBehaviour
 {
+    [SerializeField] Material matStone;
     [SerializeField] Material matWall;
     [SerializeField] Material matFloor;
     [SerializeField] Transform meshObj;
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] TextMeshPro tileText;
+
+
+    [SerializeField] bool isWalkable = false;
 
     // Start is called before the first frame update
     void Start()
@@ -31,10 +35,15 @@ public class Tile : MonoBehaviour
             case 0:
                 
                 meshRenderer.material = matWall;
-                tileText.text = "#";
+                tileText.text = " ";
+                isWalkable = false;
                 break;
             case 1:
                 meshRenderer.material = matFloor;
+                tileText.text = ".";
+                break;
+            case 2:
+                meshRenderer.material = matWall;
                 tileText.text = ".";
                 break;
             default:
