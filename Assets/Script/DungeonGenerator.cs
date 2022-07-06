@@ -13,8 +13,8 @@ public class DungeonGenerator
     public enum TileLookup
     {
         Stone,
+        Wall,
         Floor,
-        Wall
     }
 
 
@@ -44,18 +44,23 @@ public class DungeonGenerator
         {
             //for each room call lets roll coord, width, height
 
-            int roomWidth = Mathf.RoundToInt(Random.Range(3,6));
-            int roomHeight = Mathf.RoundToInt(Random.Range(3,6));
+            int roomWidth = Mathf.RoundToInt(Random.Range(4,8));
+            int roomHeight = Mathf.RoundToInt(Random.Range(4,8));
 
-            int posX = Mathf.RoundToInt(Random.Range(0, dungeonWidth));
-            int posY = Mathf.RoundToInt(Random.Range(0, dungeonHeight));
+            int posX = Mathf.RoundToInt(Random.Range(0, dungeonWidth-roomWidth));
+            int posY = Mathf.RoundToInt(Random.Range(0, dungeonHeight-roomHeight));
 
             RoomData generatedRoom = new RoomData(posX, posY, roomWidth, roomHeight);
 
             //then check if its valid
-            if (ValidRoomPlace(generatedRoom))
+            if (!AreThereFloorTilesOnRoomProposedSite(generatedRoom))
             {
+                Debug.Log("pass");
                 AddRoom(generatedRoom);
+            }
+            else
+            {
+                Debug.Log("fail");
             }
         }
 
@@ -71,39 +76,24 @@ public class DungeonGenerator
 
     public void AddRoom(RoomData room)
     {
-        if (room.width % 2 != 0)
+        for (var ctry = room.y; ctry < room.y + room.height; ctry++)
         {
-            room.width++;
-        }
-
-        if(room.height%2 != 0)
-        {
-            room.height++;
-        }
-
-        //RoomData room = new RoomData(x,y,width,height);
-
-
-        int halfHeight = Mathf.FloorToInt(room.height / 2);
-        int halfWidth = Mathf.FloorToInt(room.width/2);
-
-
-        for (var ctry = room.y - halfHeight+1; ctry <= room.y + halfHeight-1; ctry++)
-        {
-            for (var ctrx = room.x - halfWidth+1; ctrx <= room.x + halfWidth-1; ctrx++)
+            for (var ctrx = room.x; ctrx < room.x + room.width; ctrx++)
             {
                 ChangeTile(ctrx, ctry, 1);
             }
         }
+
+
+        for (var ctry = room.y+1; ctry < room.y + room.height-1; ctry++)
+        {
+            for (var ctrx = room.x+1; ctrx < room.x + room.width-1; ctrx++)
+            {
+                ChangeTile(ctrx, ctry, 2);
+            }
+        }
         
 
-        /*
-        ChangeTile(x, y, 1);
-        ChangeTile(x-width/2, y, 1);
-        ChangeTile(x+width / 2, y, 1);
-        ChangeTile(x, y-height/2, 1);
-        ChangeTile(x, y+height/2, 1);
-        */
 
         roomList.Add(room);
 
@@ -113,21 +103,22 @@ public class DungeonGenerator
     bool ValidRoomPlace(RoomData data)
     {
         //check edges
+        bool outOfBounds = false;
+        bool roomAreaClear = true;
         if(data.x-data.width >= 0 &&
             data.x+data.width < dungeonWidth &&
             data.y - data.height >= 0 &&
-            data.y+data.height < dungeonHeight &&
-
-            GetTileAt(data.x - data.width/2, data.y - data.height/2) == 0 &&
-            GetTileAt(data.x - data.width/2, data.y + data.height/2) == 0 &&
-            GetTileAt(data.x + data.width/2, data.y - data.height/2) == 0 &&
-            GetTileAt(data.x + data.width/2, data.y + data.height/2) == 0 &&
-            GetTileAt(data.x, data.y) == 0
+            data.y+data.height < dungeonHeight
             )
         {
-            return true;
+            outOfBounds = true;
         }
-        return false;
+
+            
+        
+
+        
+        return outOfBounds;
     }
 
     public void ChangeTile(int x, int y, int changeTo)
@@ -136,6 +127,17 @@ public class DungeonGenerator
         dungeonFloor[tileName] =  changeTo;
     }
 
+    bool AreThereFloorTilesOnRoomProposedSite(RoomData room)
+    {
+        for (int ty = room.y; ty < room.y + room.height; ty++)
+        {
+            for (int tx = room.x; tx < room.x + room.width; tx++)
+            {
+                if (GetTileAt(tx, ty) != 0) return true;
+            }
+        }
+        return false;
+    }
 
     /*
      FOR OUTPUT
@@ -195,5 +197,5 @@ public class DungeonGenerator
 
     }
 
-
+    
 }

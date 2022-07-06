@@ -34,16 +34,18 @@ public class Tile : MonoBehaviour
         {
             case 0:
                 
-                meshRenderer.material = matWall;
+                meshRenderer.material = matStone;
                 tileText.text = " ";
                 isWalkable = false;
                 break;
+            
             case 1:
-                meshRenderer.material = matFloor;
-                tileText.text = ".";
-                break;
-            case 2:
                 meshRenderer.material = matWall;
+                tileText.text = "#";
+                break;
+
+            case 2:
+                meshRenderer.material = matFloor;
                 tileText.text = ".";
                 break;
             default:

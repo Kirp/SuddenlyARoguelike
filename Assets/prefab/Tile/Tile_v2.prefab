@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   matStone: {fileID: 2100000, guid: 953fbecaee64a0f4f9c4aac9fc6ebbe3, type: 2}
-  matWall: {fileID: 2100000, guid: 953fbecaee64a0f4f9c4aac9fc6ebbe3, type: 2}
+  matWall: {fileID: 2100000, guid: bf86f1f7621008f439e55f533dad2da7, type: 2}
   matFloor: {fileID: 2100000, guid: 604ad118683c9584abb688dedc387844, type: 2}
   meshObj: {fileID: 4730809396253442690}
   meshRenderer: {fileID: 6845090709577870516}
