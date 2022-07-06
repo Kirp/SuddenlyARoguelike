@@ -279,7 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 5724337150569482591, guid: a5aca6e4bf852274cb959483c8bb936a, type: 3}
   floorTileParent: {fileID: 152632563}
-  dungeonWidth: 30
+  dungeonWidth: 50
   dungeonHeight: 20
 --- !u!4 &774327637
 Transform:

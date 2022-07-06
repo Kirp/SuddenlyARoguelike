@@ -64,6 +64,8 @@ public class DungeonGenerator
             }
         }
 
+        ConnectRoomToRoom(roomList[0], roomList[1]);
+
     }
 
 
@@ -73,6 +75,38 @@ public class DungeonGenerator
     /*
      For alterations
          */
+
+
+    public void ConnectRoomToRoom(RoomData startRoom, RoomData targetRoom)
+    {
+        Vector2Int startRoomCenter = new Vector2Int(startRoom.x + startRoom.width / 2, startRoom.y + startRoom.height / 2);
+        Vector2Int targetRoomCenter = new Vector2Int(targetRoom.x + targetRoom.width / 2, targetRoom.y + targetRoom.height / 2);
+
+        //lets not do a check and just plow thru anything
+        Vector2Int digTrajectory = Vector2Int.zero;
+        bool startWithYAxis = Random.value > 0.5f ? true : false;
+        if (startWithYAxis)
+        {
+            DigACorridor(startRoomCenter, new Vector2Int(startRoomCenter.x, targetRoomCenter.y));
+        }else
+        {
+            DigACorridor(startRoomCenter, new Vector2Int(targetRoomCenter.x, startRoomCenter.y));
+        }
+
+    }
+
+    public void DigACorridor(Vector2Int fromPoint, Vector2Int targetPoint)
+    {
+        for (var ctry = fromPoint.y; ctry < targetPoint.y; ctry++)
+        {
+            for (var ctrx = fromPoint.x; ctrx < targetPoint.x; ctrx++)
+            {
+                ChangeTile(ctrx, ctry, 1);
+            }
+        }
+
+
+    }
 
     public void AddRoom(RoomData room)
     {
@@ -100,11 +134,10 @@ public class DungeonGenerator
 
     }
 
-    bool ValidRoomPlace(RoomData data)
+    bool IsRoomOutOfBounds(RoomData data)
     {
         //check edges
         bool outOfBounds = false;
-        bool roomAreaClear = true;
         if(data.x-data.width >= 0 &&
             data.x+data.width < dungeonWidth &&
             data.y - data.height >= 0 &&
@@ -113,11 +146,6 @@ public class DungeonGenerator
         {
             outOfBounds = true;
         }
-
-            
-        
-
-        
         return outOfBounds;
     }
 
@@ -188,9 +216,9 @@ public class DungeonGenerator
             case 0:
                 return false;
             case 1:
-                return true;
-            case 2:
                 return false;
+            case 2:
+                return true;
             default:
                 return false;
         }
