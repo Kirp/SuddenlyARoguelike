@@ -42,6 +42,9 @@ public class Tile : MonoBehaviour
             case 1:
                 meshRenderer.material = matWall;
                 tileText.text = "#";
+                Vector3 posi = gameObject.transform.position;
+                posi.y = 1f;
+                gameObject.transform.position = posi;
                 break;
 
             case 2:
