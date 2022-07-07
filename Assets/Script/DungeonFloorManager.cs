@@ -9,6 +9,7 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] int dungeonWidth = 30;
     [SerializeField] int dungeonHeight = 20;
     DungeonGenerator dungeonGenerator;
+    [SerializeField] GameObject playerTile;
 
 
     private void Awake()
@@ -23,6 +24,10 @@ public class DungeonFloorManager : MonoBehaviour
         dungeonGenerator.GenerateDungeon();
         //dungeonGenerator.AddRoom(14,11,2,4);
         GenerateTileMap();
+
+        RoomData randomStartup = dungeonGenerator.roomList[Random.Range(0, dungeonGenerator.roomList.Count - 1)];
+        Vector2Int centerRoom = new Vector2Int(randomStartup.x+randomStartup.width/2, randomStartup.y+randomStartup.height/2);
+        Instantiate(playerTile, new Vector3(centerRoom.x, 1, centerRoom.y), Quaternion.identity);
 
     }
 

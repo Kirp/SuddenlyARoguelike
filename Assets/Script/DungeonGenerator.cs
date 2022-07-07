@@ -7,8 +7,11 @@ public class DungeonGenerator
     IDictionary<string, int> dungeonFloor = new Dictionary<string, int>();
     int dungeonWidth;
     int dungeonHeight;
+    int maxRoomAttempts = 20;
+    int roomMinimumSizeRange = 4;
+    int roomMaximumSizeRange = 10;
 
-    List<RoomData> roomList = new List<RoomData>();
+    public List<RoomData> roomList = new List<RoomData>();
 
     public enum TileLookup
     {
@@ -39,13 +42,13 @@ public class DungeonGenerator
         }
 
         //then we dig out the rooms
-        int maxRoomCalls = 20;
-        for(int ctr = 0; ctr <maxRoomCalls; ctr++)
+        
+        for(int ctr = 0; ctr < maxRoomAttempts; ctr++)
         {
             //for each room call lets roll coord, width, height
 
-            int roomWidth = Mathf.RoundToInt(Random.Range(4,8));
-            int roomHeight = Mathf.RoundToInt(Random.Range(4,8));
+            int roomWidth = Mathf.RoundToInt(Random.Range(roomMinimumSizeRange, roomMaximumSizeRange));
+            int roomHeight = Mathf.RoundToInt(Random.Range(roomMinimumSizeRange, roomMaximumSizeRange));
 
             int posX = Mathf.RoundToInt(Random.Range(0, dungeonWidth-roomWidth));
             int posY = Mathf.RoundToInt(Random.Range(0, dungeonHeight-roomHeight));
@@ -57,6 +60,11 @@ public class DungeonGenerator
             {
                 Debug.Log("pass");
                 AddRoom(generatedRoom);
+                //Debug.Log("total rooms: "+roomList.Count);
+                if (roomList.Count > 1)
+                {
+                    ConnectRoomToRoom(generatedRoom, roomList[roomList.Count-2]);
+                }
             }
             else
             {
@@ -64,7 +72,12 @@ public class DungeonGenerator
             }
         }
 
-        ConnectRoomToRoom(roomList[0], roomList[1]);
+        /*
+        for(var ctr = 0; ctr<roomList.Count-1; ctr++)
+        {
+            ConnectRoomToRoom(roomList[ctr], roomList[ctr+1]);
+        }
+        */
 
     }
 
@@ -87,26 +100,51 @@ public class DungeonGenerator
         bool startWithYAxis = Random.value > 0.5f ? true : false;
         if (startWithYAxis)
         {
-            DigACorridor(startRoomCenter, new Vector2Int(startRoomCenter.x, targetRoomCenter.y));
-        }else
+            DigACorridorVertical(startRoomCenter, new Vector2Int(startRoomCenter.x, targetRoomCenter.y));
+            DigACorridorHorizontal(new Vector2Int(startRoomCenter.x, targetRoomCenter.y), new Vector2Int(targetRoomCenter.x, startRoomCenter.y));
+        }
+        else
         {
-            DigACorridor(startRoomCenter, new Vector2Int(targetRoomCenter.x, startRoomCenter.y));
+            DigACorridorHorizontal(startRoomCenter, new Vector2Int(targetRoomCenter.x, startRoomCenter.y));
+            DigACorridorVertical(new Vector2Int(targetRoomCenter.x, startRoomCenter.y), new Vector2Int(startRoomCenter.x, targetRoomCenter.y));
         }
 
     }
 
-    public void DigACorridor(Vector2Int fromPoint, Vector2Int targetPoint)
+
+    void DigACorridorVertical(Vector2Int pointA, Vector2Int pointB)
     {
-        for (var ctry = fromPoint.y; ctry < targetPoint.y; ctry++)
+        int from = pointA.y; 
+        int target = pointB.y;
+        if(pointB.y<pointA.y)
         {
-            for (var ctrx = fromPoint.x; ctrx < targetPoint.x; ctrx++)
-            {
-                ChangeTile(ctrx, ctry, 1);
-            }
+            from = pointB.y;
+            target = pointA.y;
         }
 
-
+        for(var ctr = from; ctr<=target; ctr++)
+        {
+            ChangeTile(pointA.x, ctr, 2);
+        }
     }
+
+    void DigACorridorHorizontal(Vector2Int pointA, Vector2Int pointB)
+    {
+        int from = pointA.x; 
+        int target = pointB.x;
+        if(pointB.x<pointA.x)
+        {
+            from = pointB.x;
+            target = pointA.x;
+        }
+
+        for(var ctr = from; ctr<=target; ctr++)
+        {
+            ChangeTile(ctr, pointA.y, 2);
+        }
+    }
+
+
 
     public void AddRoom(RoomData room)
     {
