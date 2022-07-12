@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DungeonGenerator
 {
-    IDictionary<string, int> dungeonFloor = new Dictionary<string, int>();
+    IDictionary<string, TileData> dungeonFloor = new Dictionary<string, TileData>();
     int dungeonWidth;
     int dungeonHeight;
     int maxRoomAttempts = 20;
@@ -29,7 +29,7 @@ public class DungeonGenerator
         dungeonHeight = height;
     }
 
-    public void GenerateDungeon()
+    public IDictionary<string, TileData> GenerateDungeon()
     {
         //first fill it with walls
         for (var coordY = 0; coordY < dungeonHeight; coordY++)
@@ -37,7 +37,9 @@ public class DungeonGenerator
             for (var coordX = 0; coordX < dungeonWidth; coordX++)
             {
                 string tileName = coordX + "x" + coordY;
-                dungeonFloor.Add(tileName, 0);
+                TileData genDat = new TileData(coordX, coordY, 0);
+                genDat.SetWalkableTransparentSettings(false, false);
+                dungeonFloor.Add(tileName, genDat);
             }
         }
 
@@ -78,6 +80,8 @@ public class DungeonGenerator
             ConnectRoomToRoom(roomList[ctr], roomList[ctr+1]);
         }
         */
+
+        return dungeonFloor;
 
     }
 
@@ -190,7 +194,9 @@ public class DungeonGenerator
     public void ChangeTile(int x, int y, int changeTo)
     {
         string tileName = x + "x" + y;
-        dungeonFloor[tileName] =  changeTo;
+        dungeonFloor[tileName].tileType = changeTo;
+
+
     }
 
     bool AreThereFloorTilesOnRoomProposedSite(RoomData room)
@@ -211,17 +217,20 @@ public class DungeonGenerator
     public int GetTileAt(int x, int y)
     {
         string tileName = x + "x" + y;
-        return dungeonFloor[tileName];
+        return dungeonFloor[tileName].tileType;
     }
 
     public TileData[] GetAllTiles()
     {
         TileData[] tileDataList = new TileData[dungeonFloor.Count];
         int ctr = 0;
-        foreach(KeyValuePair<string, int> tile in dungeonFloor)
+        foreach(KeyValuePair<string, TileData> tile in dungeonFloor)
         {
-            string[] split = tile.Key.Split("x");
-            tileDataList[ctr] = new TileData( int.Parse(split[0]), int.Parse(split[1]),tile.Value);
+            tileDataList[ctr] = tile.Value;
+            //string[] split = tile.Key.Split("x");
+            //tileDataList[ctr] = new TileData( int.Parse(split[0]), int.Parse(split[1]),tile.Value);
+            //tileDataList[ctr].SetWalkableTransparentSettings(CheckIfWalkable(tile.Value), CheckIfTransparent(tile.Value));
+            
             ctr++;
         }
         return tileDataList;
@@ -260,7 +269,21 @@ public class DungeonGenerator
             default:
                 return false;
         }
+    }
 
+    public bool CheckIfTransparent(int tileType)
+    {
+        switch (tileType)
+        {
+            case 0:
+                return false;
+            case 1:
+                return false;
+            case 2:
+                return true;
+            default:
+                return false;
+        }
     }
 
     

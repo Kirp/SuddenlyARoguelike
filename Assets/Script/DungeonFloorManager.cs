@@ -10,6 +10,8 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] int dungeonHeight = 20;
     DungeonGenerator dungeonGenerator;
     [SerializeField] GameObject playerTile;
+    
+    IDictionary<string, TileData> generatedMap = null;
 
 
     private void Awake()
@@ -21,9 +23,10 @@ public class DungeonFloorManager : MonoBehaviour
     void Start()
     {
         dungeonGenerator = new DungeonGenerator(dungeonWidth, dungeonHeight);
-        dungeonGenerator.GenerateDungeon();
-        //dungeonGenerator.AddRoom(14,11,2,4);
+        generatedMap = dungeonGenerator.GenerateDungeon();
         GenerateTileMap();
+
+
 
         RoomData randomStartup = dungeonGenerator.roomList[Random.Range(0, dungeonGenerator.roomList.Count - 1)];
         Vector2Int centerRoom = new Vector2Int(randomStartup.x+randomStartup.width/2, randomStartup.y+randomStartup.height/2);
@@ -33,14 +36,13 @@ public class DungeonFloorManager : MonoBehaviour
 
     private void GenerateTileMap()
     {
-        TileData[] getDat = dungeonGenerator.GetAllTiles();
+        TileData[] tiles = dungeonGenerator.GetAllTiles();
 
-        foreach (TileData tile in getDat)
+        foreach (TileData tile in tiles)
         {
             GameObject genTile = Instantiate(tilePrefab, new Vector3(tile.x, 0f, tile.y), Quaternion.identity);
             genTile.GetComponent<Tile>().ChangeTileTo(tile.tileType);
             genTile.transform.parent = floorTileParent;
-            //Debug.Log(tile.x + " : " + tile.y + " = " + tile.tileType);
         }
     }
 
@@ -49,7 +51,33 @@ public class DungeonFloorManager : MonoBehaviour
     //interface for mobile tiles
     public bool IsValidMoveToTile(int x, int y)
     {
-        return dungeonGenerator.IsWithinBounds(x, y) && dungeonGenerator.CheckIfWalkable(x,y);
+        return IsCoordinateWithinBounds(x, y) && dungeonGenerator.CheckIfWalkable(x,y);
+    }
+
+    public bool CheckIfWalkable(int x, int y)
+    {
+        return false;
+        /*
+        string coord = x + "x" + y;
+        if (generatedMap==null && !generatedMap.ContainsKey(coord)) return false;
+        */
+        
+
+    }
+
+    public bool IsCoordinateWithinBounds(int x, int y)
+    {
+        if (
+            x >= 0 &&
+            x < dungeonWidth &&
+            y >= 0 &&
+            y < dungeonHeight
+           )
+        {
+            return true;
+        }
+
+        return false;
     }
 
     
