@@ -10,6 +10,7 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] int dungeonHeight = 20;
     DungeonGenerator dungeonGenerator;
     [SerializeField] GameObject playerTile;
+    GameObject currentPlayerTile = null;
     
     IDictionary<string, TileData> generatedMap = null;
     IDictionary<string, GameObject> generatedTiles = new Dictionary<string, GameObject>();
@@ -17,12 +18,6 @@ public class DungeonFloorManager : MonoBehaviour
 
 
     private void Awake()
-    {
-        
-    }
-
-    // Start is called before the first frame update
-    void Start()
     {
         dungeonGenerator = new DungeonGenerator(dungeonWidth, dungeonHeight);
         generatedMap = dungeonGenerator.GenerateDungeon();
@@ -32,8 +27,14 @@ public class DungeonFloorManager : MonoBehaviour
 
 
         RoomData randomStartup = generatedRoomList[Random.Range(0, generatedRoomList.Count - 1)];
-        Vector2Int centerRoom = new Vector2Int(randomStartup.x+randomStartup.width/2, randomStartup.y+randomStartup.height/2);
-        Instantiate(playerTile, new Vector3(centerRoom.x, 1, centerRoom.y), Quaternion.identity);
+        Vector2Int centerRoom = new Vector2Int(randomStartup.x + randomStartup.width / 2, randomStartup.y + randomStartup.height / 2);
+        currentPlayerTile = Instantiate(playerTile, new Vector3(centerRoom.x, 1, centerRoom.y), Quaternion.identity);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
 
     }
 

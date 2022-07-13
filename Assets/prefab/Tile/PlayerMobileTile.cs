@@ -9,6 +9,7 @@ public class PlayerMobileTile : MonoBehaviour
     [SerializeField] DungeonFloorManager dfm;
 
     // Start is called before the first frame update
+
     void Start()
     {
         dfm = FindObjectOfType<DungeonFloorManager>();
