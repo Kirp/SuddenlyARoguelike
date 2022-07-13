@@ -14,12 +14,37 @@ public class TileData
         this.tileType = tileType;
         dark = true;
         light = false;
+        AutoWalkTransparentSettingViaType(tileType);
     }
 
     public void SetWalkableTransparentSettings(bool walkable, bool transparent)
     {
         this.walkable = walkable;
         this.transparent = transparent;
+    }
+
+
+    public void AutoWalkTransparentSettingViaType(int tileType)
+    {
+        switch (tileType)
+        {
+            case 0:
+                this.walkable = false;
+                this.transparent = false;
+                break;
+            case 1:
+                this.walkable = false;
+                this.transparent = false;
+                break;
+            case 2:
+                this.walkable = true;
+                this.transparent = true;
+                break;
+            default:
+                this.walkable = false;
+                this.transparent = false;
+                break;
+        }
     }
 
 

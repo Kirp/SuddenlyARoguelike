@@ -51,16 +51,16 @@ public class DungeonFloorManager : MonoBehaviour
     //interface for mobile tiles
     public bool IsValidMoveToTile(int x, int y)
     {
-        return IsCoordinateWithinBounds(x, y) && dungeonGenerator.CheckIfWalkable(x,y);
+        return IsCoordinateWithinBounds(x, y) && CheckIfWalkable(x,y);
     }
 
     public bool CheckIfWalkable(int x, int y)
     {
-        return false;
-        /*
+        
+        
         string coord = x + "x" + y;
-        if (generatedMap==null && !generatedMap.ContainsKey(coord)) return false;
-        */
+        if (generatedMap==null || !generatedMap.ContainsKey(coord)) return false;
+        return generatedMap[coord].walkable;
         
 
     }

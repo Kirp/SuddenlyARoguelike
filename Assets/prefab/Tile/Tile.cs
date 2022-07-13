@@ -11,20 +11,11 @@ public class Tile : MonoBehaviour
     [SerializeField] Transform meshObj;
     [SerializeField] MeshRenderer meshRenderer;
     [SerializeField] TextMeshPro tileText;
+    TileData tileData;
 
-
-    [SerializeField] bool isWalkable = false;
-
-    // Start is called before the first frame update
-    void Start()
+    public void LoadTileData(TileData tileData)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        this.tileData = tileData;
     }
 
     public void ChangeTileTo(int type)
@@ -36,7 +27,7 @@ public class Tile : MonoBehaviour
                 
                 meshRenderer.material = matStone;
                 tileText.text = " ";
-                isWalkable = false;
+                //gameObject.SetActive(false);
                 break;
             
             case 1:

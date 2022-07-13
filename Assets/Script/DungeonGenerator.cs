@@ -38,7 +38,7 @@ public class DungeonGenerator
             {
                 string tileName = coordX + "x" + coordY;
                 TileData genDat = new TileData(coordX, coordY, 0);
-                genDat.SetWalkableTransparentSettings(false, false);
+                //genDat.SetWalkableTransparentSettings(false, false);
                 dungeonFloor.Add(tileName, genDat);
             }
         }
@@ -60,7 +60,7 @@ public class DungeonGenerator
             //then check if its valid
             if (!AreThereFloorTilesOnRoomProposedSite(generatedRoom))
             {
-                Debug.Log("pass");
+                //Debug.Log("pass");
                 AddRoom(generatedRoom);
                 //Debug.Log("total rooms: "+roomList.Count);
                 if (roomList.Count > 1)
@@ -70,7 +70,7 @@ public class DungeonGenerator
             }
             else
             {
-                Debug.Log("fail");
+                //Debug.Log("fail");
             }
         }
 
