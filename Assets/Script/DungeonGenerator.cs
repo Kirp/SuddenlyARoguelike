@@ -194,7 +194,8 @@ public class DungeonGenerator
     public void ChangeTile(int x, int y, int changeTo)
     {
         string tileName = x + "x" + y;
-        dungeonFloor[tileName].tileType = changeTo;
+        //dungeonFloor[tileName].tileType = changeTo;
+        dungeonFloor[tileName].ChangeTileType(changeTo);
 
 
     }

@@ -12,6 +12,7 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] GameObject playerTile;
     
     IDictionary<string, TileData> generatedMap = null;
+    IDictionary<string, GameObject> generatedMapOnTiles = null;
 
 
     private void Awake()
@@ -41,8 +42,12 @@ public class DungeonFloorManager : MonoBehaviour
         foreach (TileData tile in tiles)
         {
             GameObject genTile = Instantiate(tilePrefab, new Vector3(tile.x, 0f, tile.y), Quaternion.identity);
-            genTile.GetComponent<Tile>().ChangeTileTo(tile.tileType);
+            Tile tileScript = genTile.GetComponent<Tile>();
+            tileScript.ChangeTileTo(tile.tileType);
             genTile.transform.parent = floorTileParent;
+            string coord = tile.x + "x" + tile.y;
+            tileScript.LoadTileData(generatedMap[coord]);
+            generatedMapOnTiles[coord] = genTile;
         }
     }
 
@@ -51,7 +56,9 @@ public class DungeonFloorManager : MonoBehaviour
     //interface for mobile tiles
     public bool IsValidMoveToTile(int x, int y)
     {
-        return IsCoordinateWithinBounds(x, y) && CheckIfWalkable(x,y);
+        bool isVal = IsCoordinateWithinBounds(x, y) && CheckIfWalkable(x,y);
+        Debug.Log("move validity: "+isVal);
+        return isVal;
     }
 
     public bool CheckIfWalkable(int x, int y)
@@ -59,7 +66,12 @@ public class DungeonFloorManager : MonoBehaviour
         
         
         string coord = x + "x" + y;
-        if (generatedMap==null || !generatedMap.ContainsKey(coord)) return false;
+        if (generatedMap == null || !generatedMap.ContainsKey(coord))
+        {
+            Debug.Log("key not found");
+            return false;
+        }
+        Debug.Log("key found: "+coord+" => " + generatedMap[coord].walkable);
         return generatedMap[coord].walkable;
         
 
