@@ -11,7 +11,11 @@ public class DungeonGenerator
     int roomMinimumSizeRange = 4;
     int roomMaximumSizeRange = 10;
 
-    public List<RoomData> roomList = new List<RoomData>();
+    List<RoomData> roomList = new List<RoomData>();
+    public List<RoomData> RoomList
+    {
+        get { return roomList; }
+    }
 
     public enum TileLookup
     {

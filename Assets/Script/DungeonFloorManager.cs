@@ -12,7 +12,8 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] GameObject playerTile;
     
     IDictionary<string, TileData> generatedMap = null;
-    IDictionary<string, GameObject> generatedMapOnTiles = null;
+    IDictionary<string, GameObject> generatedTiles = new Dictionary<string, GameObject>();
+    public List<RoomData> generatedRoomList = null;
 
 
     private void Awake()
@@ -25,11 +26,12 @@ public class DungeonFloorManager : MonoBehaviour
     {
         dungeonGenerator = new DungeonGenerator(dungeonWidth, dungeonHeight);
         generatedMap = dungeonGenerator.GenerateDungeon();
+
         GenerateTileMap();
+        generatedRoomList = dungeonGenerator.RoomList;
 
 
-
-        RoomData randomStartup = dungeonGenerator.roomList[Random.Range(0, dungeonGenerator.roomList.Count - 1)];
+        RoomData randomStartup = generatedRoomList[Random.Range(0, generatedRoomList.Count - 1)];
         Vector2Int centerRoom = new Vector2Int(randomStartup.x+randomStartup.width/2, randomStartup.y+randomStartup.height/2);
         Instantiate(playerTile, new Vector3(centerRoom.x, 1, centerRoom.y), Quaternion.identity);
 
@@ -47,7 +49,7 @@ public class DungeonFloorManager : MonoBehaviour
             genTile.transform.parent = floorTileParent;
             string coord = tile.x + "x" + tile.y;
             tileScript.LoadTileData(generatedMap[coord]);
-            generatedMapOnTiles[coord] = genTile;
+            generatedTiles[coord] = genTile;
         }
     }
 
