@@ -50,6 +50,7 @@ public class PlayerMobileTile : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             isMoving = false;
+            dfm.PlayerCallFOV();
         }
         
 

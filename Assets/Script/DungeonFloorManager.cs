@@ -11,6 +11,12 @@ public class DungeonFloorManager : MonoBehaviour
     DungeonGenerator dungeonGenerator;
     [SerializeField] GameObject playerTile;
     GameObject currentPlayerTile = null;
+    FOVControl fovControl;
+
+    public GameObject CurrentPlayerTile
+    {
+        get { return currentPlayerTile; }
+    }
     
     IDictionary<string, TileData> generatedMap = null;
     IDictionary<string, GameObject> generatedTiles = new Dictionary<string, GameObject>();
@@ -29,13 +35,16 @@ public class DungeonFloorManager : MonoBehaviour
         RoomData randomStartup = generatedRoomList[Random.Range(0, generatedRoomList.Count - 1)];
         Vector2Int centerRoom = new Vector2Int(randomStartup.x + randomStartup.width / 2, randomStartup.y + randomStartup.height / 2);
         currentPlayerTile = Instantiate(playerTile, new Vector3(centerRoom.x, 1, centerRoom.y), Quaternion.identity);
+
+        fovControl = GetComponent<FOVControl>();
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
 
+        fovControl.RunFOVCheck();
     }
 
     private void GenerateTileMap()
@@ -93,6 +102,29 @@ public class DungeonFloorManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void LightUpTiles(Vector2Int[] lightEm)
+    {
+        string namer;
+        for(var ctr =0; ctr < lightEm.Length; ctr++)
+        {
+            Vector2Int changeThis = lightEm[ctr];
+            if (IsCoordinateWithinBounds(changeThis.x, changeThis.y))
+            {
+                namer = changeThis.x + "x" + changeThis.y;
+                TileData tileData = generatedMap[namer];
+                tileData.SetToVisible();
+                tileData.SetIsLit(true);
+                generatedMap[namer] = tileData;
+                generatedTiles[namer].GetComponent<Tile>().LoadTileData(tileData);
+            }
+        }
+    }
+
+    public void PlayerCallFOV()
+    {
+        fovControl.RunFOVCheck();
     }
 
     

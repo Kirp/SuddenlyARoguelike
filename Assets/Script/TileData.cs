@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class TileData 
 {
     public int x, y, tileType;
-    public bool walkable, transparent, dark, light, visible;
+    public bool walkable, transparent, isLit, visible;
 
 
     
@@ -13,10 +13,22 @@ public class TileData
         this.x = x;
         this.y = y;
         this.tileType = tileType;
-        dark = true;
-        light = false;
+        isLit = false;
         visible = false;
         AutoWalkTransparentSettingViaType(tileType);
+    }
+
+    public void SetToVisible()
+    {
+        visible = true;
+    }
+
+    public void SetIsLit(bool litUp)
+    {
+        if (transparent)
+        {
+            isLit = litUp;
+        }
     }
 
     public void ChangeTileType(int tileType)

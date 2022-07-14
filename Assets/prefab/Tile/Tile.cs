@@ -18,17 +18,20 @@ public class Tile : MonoBehaviour
     public void LoadTileData(TileData tileData)
     {
         this.tileData = tileData;
+        UpdateAppearenceWithTileData();
     }
 
     public void UpdateAppearenceWithTileData()
     {
         if (tileData == null) return;
+        ChangeTileTo(tileData.tileType);
+        UpdateVisibility();
     }
 
     
     public void UpdateVisibility()
     {
-        this.meshObj.gameObject.SetActive(visibility);
+        this.meshObj.gameObject.SetActive(tileData.visible);
     }
     
 

@@ -51,7 +51,6 @@ MonoBehaviour:
   meshObj: {fileID: 4730809396253442690}
   meshRenderer: {fileID: 6845090709577870516}
   tileText: {fileID: 3316591569356914627}
-  isWalkable: 0
 --- !u!1 &5915288807672817413
 GameObject:
   m_ObjectHideFlags: 0
