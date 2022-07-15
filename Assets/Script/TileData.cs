@@ -13,9 +13,10 @@ public class TileData
         this.x = x;
         this.y = y;
         this.tileType = tileType;
+        AutoWalkTransparentSettingViaType(tileType);
         isLit = false;
         visible = false;
-        AutoWalkTransparentSettingViaType(tileType);
+        
     }
 
     public void SetToVisible()
@@ -25,10 +26,10 @@ public class TileData
 
     public void SetIsLit(bool litUp)
     {
-        if (transparent)
-        {
+        //if (transparent)
+        //{
             isLit = litUp;
-        }
+        //}
     }
 
     public void ChangeTileType(int tileType)

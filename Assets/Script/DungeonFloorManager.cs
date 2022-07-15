@@ -8,19 +8,22 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] Transform floorTileParent;
     [SerializeField] int dungeonWidth = 30;
     [SerializeField] int dungeonHeight = 20;
-    DungeonGenerator dungeonGenerator;
     [SerializeField] GameObject playerTile;
+    DungeonGenerator dungeonGenerator;
     GameObject currentPlayerTile = null;
     FOVControl fovControl;
+    IDictionary<string, TileData> generatedMap = null;
+    IDictionary<string, GameObject> generatedTiles = new Dictionary<string, GameObject>();
+    List<string> lightedTiles = new List<string>();
+
 
     public GameObject CurrentPlayerTile
     {
         get { return currentPlayerTile; }
     }
-    
-    IDictionary<string, TileData> generatedMap = null;
-    IDictionary<string, GameObject> generatedTiles = new Dictionary<string, GameObject>();
     public List<RoomData> generatedRoomList = null;
+
+    
 
 
     private void Awake()
@@ -44,7 +47,9 @@ public class DungeonFloorManager : MonoBehaviour
     void Start()
     {
 
-        fovControl.RunFOVCheck();
+        PlayerCallFOV();
+        //fovControl.RunFOVCheck();
+        
     }
 
     private void GenerateTileMap()
@@ -63,7 +68,26 @@ public class DungeonFloorManager : MonoBehaviour
         }
     }
 
-    
+
+    public Vector2Int[] GetRoomTileVectorList(RoomData room)
+    {
+        Vector2Int[] outList = new Vector2Int[room.width*room.height];
+        int ctr = 0;
+        for (var ctry = room.y; ctry < room.y + room.height; ctry++)
+        {
+            for (var ctrx = room.x; ctrx < room.x + room.width; ctrx++)
+            {
+                outList[ctr] = new Vector2Int(ctrx, ctry);
+                ctr++;
+                
+            }
+        }
+
+        return outList;
+
+
+    }
+
 
     //interface for mobile tiles
     public bool IsValidMoveToTile(int x, int y)
@@ -118,13 +142,51 @@ public class DungeonFloorManager : MonoBehaviour
                 tileData.SetIsLit(true);
                 generatedMap[namer] = tileData;
                 generatedTiles[namer].GetComponent<Tile>().LoadTileData(tileData);
+                lightedTiles.Add(namer);
             }
         }
     }
 
+    public void TurnOffLitTiles()
+    {
+        foreach(string namer in lightedTiles)
+        {
+            TileData tileData = generatedMap[namer];
+            tileData.SetIsLit(false);
+            generatedMap[namer] = tileData;
+            generatedTiles[namer].GetComponent<Tile>().LoadTileData(tileData);
+        }
+        lightedTiles.Clear();
+    }
+
+    public RoomData IsPlayerInARoom()
+    {
+        Vector3 playerPosition = currentPlayerTile.transform.position;
+        Vector2Int convertPos = new Vector2Int((int)playerPosition.x, (int)playerPosition.z);
+        
+
+        for(var ctr =0 ; ctr < generatedRoomList.Count; ctr++)
+        {
+            RoomData data = generatedRoomList[ctr];
+            if(
+                convertPos.x > data.x &&
+                convertPos.x < data.x+data.width &&
+                convertPos.y > data.y &&
+                convertPos.y < data.y + data.height
+               )
+            {
+                return data;
+            }
+        }
+
+        return null;
+     }
+
     public void PlayerCallFOV()
     {
+        TurnOffLitTiles();
         fovControl.RunFOVCheck();
+
     }
 
     

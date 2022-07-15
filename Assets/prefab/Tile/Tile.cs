@@ -31,7 +31,17 @@ public class Tile : MonoBehaviour
     
     public void UpdateVisibility()
     {
-        this.meshObj.gameObject.SetActive(tileData.visible);
+        //this.meshObj.gameObject.SetActive(tileData.visible);
+        tileText.gameObject.SetActive(tileData.visible);
+
+        if(tileData.isLit==false)
+        {
+            tileText.alpha = 0.5f;
+        }else
+        {
+            tileText.alpha = 1;
+        }
+
     }
     
 
@@ -42,21 +52,21 @@ public class Tile : MonoBehaviour
         {
             case 0:
                 
-                meshRenderer.material = matStone;
+                //meshRenderer.material = matStone;
                 tileText.text = " ";
                 //gameObject.SetActive(false);
                 break;
             
             case 1:
-                meshRenderer.material = matWall;
+                //meshRenderer.material = matWall;
                 tileText.text = "#";
-                Vector3 posi = gameObject.transform.position;
-                posi.y = 1f;
-                gameObject.transform.position = posi;
+                //Vector3 posi = gameObject.transform.position;
+                //posi.y = 1f;
+                //gameObject.transform.position = posi;
                 break;
 
             case 2:
-                meshRenderer.material = matFloor;
+                //meshRenderer.material = matFloor;
                 tileText.text = ".";
                 break;
             default:

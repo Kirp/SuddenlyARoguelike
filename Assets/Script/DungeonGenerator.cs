@@ -12,6 +12,7 @@ public class DungeonGenerator
     int roomMaximumSizeRange = 10;
 
     List<RoomData> roomList = new List<RoomData>();
+    
     public List<RoomData> RoomList
     {
         get { return roomList; }
@@ -172,12 +173,8 @@ public class DungeonGenerator
                 ChangeTile(ctrx, ctry, 2);
             }
         }
-        
-
 
         roomList.Add(room);
-
-
     }
 
     bool IsRoomOutOfBounds(RoomData data)

@@ -32,6 +32,15 @@ public class FOVControl : MonoBehaviour
         //get the player position and then the immediate sides
         if (dungeonFloorManager.CurrentPlayerTile == null) return;
         Vector2Int[] PositionList = GetCardinalDirectionsFromGameObject(dungeonFloorManager.CurrentPlayerTile);
+        Vector2Int[] RoomTiles;
+        RoomData pRoom = dungeonFloorManager.IsPlayerInARoom();
+        if (pRoom != null)
+        {
+            Debug.Log("light up the room!");
+            RoomTiles = dungeonFloorManager.GetRoomTileVectorList(pRoom);
+            dungeonFloorManager.LightUpTiles(RoomTiles);
+        }
+
 
         //now light em up in the dungeonFloorManager
         dungeonFloorManager.LightUpTiles(PositionList);
