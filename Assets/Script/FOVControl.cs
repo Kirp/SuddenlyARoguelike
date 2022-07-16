@@ -32,6 +32,14 @@ public class FOVControl : MonoBehaviour
         //get the player position and then the immediate sides
         if (dungeonFloorManager.CurrentPlayerTile == null) return;
         Vector2Int[] PositionList = GetCardinalDirectionsFromGameObject(dungeonFloorManager.CurrentPlayerTile);
+        IDictionary<string, float> lightTileValues = new Dictionary<string, float>();
+
+
+
+
+
+
+        //lets auto light up the room a player is in
         Vector2Int[] RoomTiles;
         RoomData pRoom = dungeonFloorManager.IsPlayerInARoom();
         if (pRoom != null)
@@ -45,6 +53,11 @@ public class FOVControl : MonoBehaviour
         //now light em up in the dungeonFloorManager
         dungeonFloorManager.LightUpTiles(PositionList);
         
+    }
+
+    void spreadTheLight(Vector2Int startingPoint)
+    {
+
     }
 
     Vector2Int[] GetCardinalDirectionsFromGameObject(GameObject looker)
@@ -62,5 +75,21 @@ public class FOVControl : MonoBehaviour
         return NWES;
     }
 
-    
+    Vector2Int[] GetCardinalDirectionsFromVector2Int(Vector2Int startPoint)
+    {
+        
+        Vector2Int[] NWES =
+        {
+            new Vector2Int(startPoint.x, startPoint.y+1),
+            new Vector2Int(startPoint.x-1, startPoint.y),
+            new Vector2Int(startPoint.x+1, startPoint.y),
+            new Vector2Int(startPoint.x, startPoint.y-1)
+        };
+
+        return NWES;
+    }
+
+
+
+
 }
