@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class PlayerMobileTile : MonoBehaviour
+public class NPCMobile : MonoBehaviour
 {
-    Vector3 dPadDetector = Vector3.zero;
+    [SerializeField] TextMeshPro tileText;
+    TileData tileData = null;
+    bool visibility = false;
     bool isMoving = false;
     [SerializeField] DungeonFloorManager dfm;
-    bool waitingForTurn = true;
 
     // Start is called before the first frame update
-
     void Start()
     {
         dfm = FindObjectOfType<DungeonFloorManager>();
@@ -19,35 +20,21 @@ public class PlayerMobileTile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dPadDetector.x = Input.GetAxisRaw("Horizontal");
-        dPadDetector.z = Input.GetAxisRaw("Vertical");
         
-        if (dPadDetector.x != 0 || dPadDetector.z!=0)
-        {
-            //No diagonals yo
-            if (dPadDetector.x != 0 && dPadDetector.z != 0) return;
-
-            if(!isMoving) StartCoroutine(MoveStep(dPadDetector));
-        }
     }
 
     void TakeTurn()
-    {
-        waitingForTurn = true;
-    }
-
-    void DeclareEndOfTurn()
     {
 
     }
 
     IEnumerator MoveStep(Vector3 direction)
     {
-        
-        
+
+
         var oldLocation = transform.position;
         var newLocation = transform.position + direction;
-        if(dfm.IsValidMoveToTile((int) newLocation.x,(int)newLocation.z))
+        if (dfm.IsValidMoveToTile((int)newLocation.x, (int)newLocation.z))
         {
             isMoving = true;
             float currentMoveTime = 0f;
@@ -62,7 +49,6 @@ public class PlayerMobileTile : MonoBehaviour
             }
             isMoving = false;
             dfm.PlayerCallFOV();
-            waitingForTurn = false;
         }
     }
 }

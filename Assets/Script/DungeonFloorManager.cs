@@ -10,19 +10,20 @@ public class DungeonFloorManager : MonoBehaviour
     [SerializeField] int dungeonHeight = 20;
     [SerializeField] GameObject playerTile;
     DungeonGenerator dungeonGenerator;
-    GameObject currentPlayerTile = null;
+    
     FOVControl fovControl;
     IDictionary<string, TileData> generatedMap = null;
     IDictionary<string, GameObject> generatedTiles = new Dictionary<string, GameObject>();
     List<string> lightedTiles = new List<string>();
 
-
+    GameObject currentPlayerTile = null;
     public GameObject CurrentPlayerTile
     {
         get { return currentPlayerTile; }
     }
     public List<RoomData> generatedRoomList = null;
 
+    [SerializeField] List<GameObject> mobList = new List<GameObject>();
     
 
 
@@ -38,6 +39,7 @@ public class DungeonFloorManager : MonoBehaviour
         RoomData randomStartup = generatedRoomList[Random.Range(0, generatedRoomList.Count - 1)];
         Vector2Int centerRoom = new Vector2Int(randomStartup.x + randomStartup.width / 2, randomStartup.y + randomStartup.height / 2);
         currentPlayerTile = Instantiate(playerTile, new Vector3(centerRoom.x, 1, centerRoom.y), Quaternion.identity);
+        mobList.Add(currentPlayerTile);
 
         fovControl = GetComponent<FOVControl>();
         
@@ -186,6 +188,10 @@ public class DungeonFloorManager : MonoBehaviour
     {
         TurnOffLitTiles();
         fovControl.RunFOVCheck();
+    }
+
+    public void EndTurnCall(GameObject turnTaker)
+    {
 
     }
 
